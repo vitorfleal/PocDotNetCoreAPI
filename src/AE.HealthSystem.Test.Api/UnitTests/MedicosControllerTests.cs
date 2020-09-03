@@ -41,12 +41,12 @@ namespace AE.HealthSystem.Test.Api.UnitTests
                  );
         }
 
-        [Fact(DisplayName = "Obter Médicos Por Id com sucesso")]
+        [Theory]
+        [InlineData(1)]
         [Trait("Médico", "Testes Medicos Controller")]
-        public void MedicosController_ObterMedicoPorId_RetornarComSucesso()
+        public void MedicosController_ObterMedicoPorId_RetornarComSucesso(long id)
         {
-            const long id = 1;
-
+            // Arrange
             var listMedicoViewModelFaker = new Faker<ListMedicoViewModel>("pt_BR")
                 .RuleFor(r => r.Id, c => c.Random.Long())
                  .RuleFor(r => r.Nome, c => c.Name.FullName(Name.Gender.Male))
@@ -55,8 +55,10 @@ namespace AE.HealthSystem.Test.Api.UnitTests
 
             mockMapper.Setup(m => m.Map<ListMedicoViewModel>(It.IsAny<Medico>())).Returns(listMedicoViewModelFaker);
 
+            // Act
             var result = medicosController.ObterMedicoPorId(id).Result;
 
+            // Assert
             Assert.IsType<OkObjectResult>(result);
         }
 
@@ -64,6 +66,7 @@ namespace AE.HealthSystem.Test.Api.UnitTests
         [Trait("Médico", "Testes Medicos Controller")]
         public void MedicosController_ObterMedicos_RetornarComSucesso()
         {
+            // Arrange
             var listMedicoViewModelFaker = new Faker<ListMedicoViewModel>("pt_BR")
                 .RuleFor(r => r.Id, c => c.Random.Long())
                  .RuleFor(r => r.Nome, c => c.Name.FullName(Name.Gender.Male))
@@ -72,8 +75,10 @@ namespace AE.HealthSystem.Test.Api.UnitTests
 
             mockMapper.Setup(m => m.Map<IEnumerable<ListMedicoViewModel>>(It.IsAny <IEnumerable<Medico>>())).Returns(listMedicoViewModelFaker);
 
+            // Act
             var result = medicosController.ObterMedicos().Result;
 
+            // Assert
             Assert.IsType<OkObjectResult>(result);
         }
     }

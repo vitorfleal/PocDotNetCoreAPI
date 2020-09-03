@@ -4,8 +4,9 @@ namespace AE.HealthSystem.Domain.Entities
 {
     public class Medico : Pessoa
     {
-        public Medico(string especialidade)
+        public Medico(string nome, string especialidade)
         {
+            Nome = nome;
             Especialidade = especialidade;
         }
 

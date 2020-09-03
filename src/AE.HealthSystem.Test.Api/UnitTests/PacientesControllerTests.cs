@@ -46,12 +46,12 @@ namespace AE.HealthSystem.Test.Api.UnitTests
                  );
         }
 
-        [Fact(DisplayName = "Obter Consultas Por Paciente com sucesso")]
+        [Theory]
+        [InlineData("Carlos Silva")]
         [Trait("Paciente", "Testes Pacientes Controller")]
-        public void PacientesController_ObterConsultasPorPaciente_RetornarComSucesso()
+        public void PacientesController_ObterConsultasPorPaciente_RetornarComSucesso(string nome)
         {
-            const string nome = "Carlos Silva";
-
+            // Arrange
             var listConsultaViewModelFaker = new Faker<ListConsultaViewModel>("pt_BR")
                 .RuleFor(r => r.Id, c => c.Random.Long())
                  .RuleFor(r => r.DataAgendamento, c => c.Date.Recent(100))
@@ -61,8 +61,10 @@ namespace AE.HealthSystem.Test.Api.UnitTests
 
             mockMapper.Setup(m => m.Map<IEnumerable<ListConsultaViewModel>>(It.IsAny<IEnumerable<Consulta>>())).Returns(listConsultaViewModelFaker.AsEnumerable());
 
+            // Act
             var result = pacientesController.ObterConsultasPorPaciente(nome).Result;
 
+            // Assert
             Assert.IsType<OkObjectResult>(result);
         }
 
@@ -70,6 +72,7 @@ namespace AE.HealthSystem.Test.Api.UnitTests
         [Trait("Paciente", "Testes Pacientes Controller")]
         public void PacientesController_CadastrarPaciente_RetornarComSucesso()
         {
+            // Arrange
             var pacienteFaker = new Faker<Paciente>("pt_BR")
                 .RuleFor(r => r.Nome, c => c.Name.FullName(Name.Gender.Male))
                  .RuleFor(r => r.Enfermidade, c => c.Name.FirstName())
@@ -83,8 +86,10 @@ namespace AE.HealthSystem.Test.Api.UnitTests
             mockMapper.Setup(m => m.Map<Paciente>(It.IsAny<ToEntityPacienteViewModel>())).Returns(pacienteFaker);
             mockPacienteValidator.Setup(m => m.Validate(It.IsAny<Paciente>()).IsValid).Returns(true);
 
+            // Act
             var result = pacientesController.Post(toEntityPacienteViewModelFaker).Result;
 
+            // Assert
             Assert.IsType<OkObjectResult>(result);
         }
 
@@ -92,6 +97,7 @@ namespace AE.HealthSystem.Test.Api.UnitTests
         [Trait("Paciente", "Testes Pacientes Controller")]
         public void PacientesController_AtualizarPaciente_RetornarComSucesso()
         {
+            // Arrange
             var pacienteFaker = new Faker<Paciente>("pt_BR")
                 .RuleFor(r => r.Id, c => c.Random.Long())
                 .RuleFor(r => r.Nome, c => c.Name.FullName(Name.Gender.Male))
@@ -108,17 +114,19 @@ namespace AE.HealthSystem.Test.Api.UnitTests
             mockMapper.Setup(m => m.Map<Paciente>(It.IsAny<ToEntityPacienteViewModel>())).Returns(pacienteFaker);
             mockPacienteValidator.Setup(m => m.Validate(It.IsAny<Paciente>()).IsValid).Returns(true);
 
+            // Act
             var result = pacientesController.Put(toEntityPacienteViewModelFaker).Result;
 
+            // Assert
             Assert.IsType<OkObjectResult>(result);
         }
 
-        [Fact(DisplayName = "Excluir Paciente com sucesso")]
+        [Theory]
+        [InlineData(1)]
         [Trait("Paciente", "Testes Pacientes Controller")]
-        public void PacientesController_ExcluirPaciente_RetornarComSucesso()
+        public void PacientesController_ExcluirPaciente_RetornarComSucesso(long id)
         {
-            const long id = 1;
-
+            // Arrange
             var pacienteFaker = new Faker<Paciente>("pt_BR")
                 .RuleFor(r => r.Id, c => c.Random.Long())
                 .RuleFor(r => r.Nome, c => c.Name.FullName(Name.Gender.Male))
@@ -127,8 +135,10 @@ namespace AE.HealthSystem.Test.Api.UnitTests
 
             mockPacienteRepository.Setup(m => m.ObterPorId(It.IsAny<long>())).Returns(pacienteFaker);
 
+            // Act
             var result = pacientesController.Delete(id).Result;
 
+            // Assert
             Assert.IsType<OkObjectResult>(result);
         }
 
